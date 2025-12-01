@@ -1,16 +1,25 @@
 provider "aws" {
   region = var.region
 }
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "ap-south-1"
-}
-module "network" {
-  source = "./module/network"
-  region = var.region
+
+module "vpc" {
+  source     = "./modules/vpc"
+  cidr_block = var.vpc_cidr
+  name       = "my-vpc"
 }
 
-module "ec2-instances" {
-  source="./module/ec2-instances/"
- }
+module "subnet" {
+  source     = "./modules/subnet"
+  vpc_id     = module.vpc.id
+  cidr_block = var.subnet_cidr
+  az         = var.availability_zone
+  name       = "my-subnet"
+}
+
+module "ec2" {
+  source        = "./modules/ec2"
+  ami           = var.ami_id
+  instance_type = var.instance_type
+  subnet_id     = module.subnet.id
+  name          = "my-ec2"
+}
