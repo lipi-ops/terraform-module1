@@ -7,10 +7,10 @@ variable "region" {
   default     = "ap-south-1"
 }
 module "network" {
-  source = "./modules/network"
+  source = "./module/network"
   region = var.region
 }
 
 module "ec2-instances" {
-  source="./modules/ec2-instances/"
+  source="./module/ec2-instances/"
  }
